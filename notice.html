@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নোটিশ বোর্ড | LARMS | ভূমি অধিগ্রহণ ও হুকুমদখল ব্যবস্থাপনা সিস্টেম</title>
+
+    <link rel="icon" type="image/webp" href="1745410290.webp">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <style>
+        :root {
+            --bd-green: #116839;
+            --bd-green-hover: #0d4f2b;
+            --bd-red: #da251d;
+            --bd-gold: #f39c12;
+            --bg-gray: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-gray);
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        /* Govt Top Bar & Navbar (Kept identical to your design) */
+        .header-main {
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .govt-logo { width: 60px; height: auto; }
+        
+        .brand-text h4 {
+            color: var(--bd-green);
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .brand-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: #343a40;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 5px;
+            left: 15px;
+            background-color: var(--bd-green);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            width: calc(100% - 30px);
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--bd-green);
+        }
+
+        .btn-login {
+            background-color: var(--bd-green);
+            color: #fff !important;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(17, 104, 57, 0.2);
+        }
+
+        .btn-login:hover {
+            background-color: var(--bd-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(17, 104, 57, 0.3);
+        }
+
+        /* Dropdown Styling */
+        .dropdown-menu { border-radius: 8px; padding: 8px 0; }
+        .dropdown-item { transition: all 0.2s ease; font-size: 0.95rem; color: #444; }
+        .dropdown-item:hover {
+            background-color: var(--bg-gray);
+            color: var(--bd-green);
+            padding-left: 20px;
+        }
+        .navbar-nav .nav-link.btn-login.show,
+        .navbar-nav .nav-link.btn-login:focus,
+        .navbar-nav .nav-link.btn-login:active {
+            background-color: var(--bd-green-hover) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 6px rgba(17, 104, 57, 0.2);
+        }
+
+        /* Footer */
+        .footer-top {
+            background-color: var(--bd-green);
+            color: white;
+            padding: 50px 0;
+            position: relative;
+        }
+        .footer-top::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--bd-gold);
+        }
+        .footer-top a { color: #d1e7dd; text-decoration: none; transition: color 0.3s ease; }
+        .footer-top a:hover { color: var(--bd-gold); padding-left: 5px; }
+        .footer-bottom { background-color: var(--bd-green-hover); color: #d1e7dd; padding: 20px 0; font-size: 0.95rem; }
+        .ddc-link { color: var(--bd-gold); text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        .ddc-link:hover { color: #fff; }
+
+        /* Custom DataTable Styling for Gov Theme */
+        .page-item.active .page-link {
+            background-color: var(--bd-green);
+            border-color: var(--bd-green);
+        }
+        .page-link { color: var(--bd-green); }
+        .page-link:hover { color: var(--bd-green-hover); }
+        .table thead th {
+            background-color: var(--bd-green) !important;
+            color: white !important;
+            font-weight: 600;
+        }
+        .filter-card {
+            border-top: 4px solid var(--bd-gold);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .btn-search {
+            background-color: var(--bd-green);
+            color: white;
+            font-weight: 600;
+        }
+        .btn-search:hover {
+            background-color: var(--bd-green-hover);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-main sticky-top">
+        <div class="container py-3 d-flex justify-content-between align-items-center">
+            <a href="index.html" class="text-decoration-none d-flex align-items-center gap-3">
+                <img src="Government_Seal_of_Bangladesh (1).svg" alt="Govt Logo" class="govt-logo">
+                <div class="brand-text">
+                    <p>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</p>
+                    <h4>ভূমি মন্ত্রণালয়</h4>
+                    <p class="fw-bold text-dark">ভূমি ব্যবস্থাপনা অটোমেশন</p>
+                </div>
+            </a>
+            <div class="d-none d-lg-block text-end">
+                <a href="#" class="text-decoration-none d-flex align-items-center gap-3">
+                    <img src="1745410290.webp" alt="LARMS Logo" class="govt-logo">
+                    <div class="brand-text">
+                        <p class="fw-bold text-dark">ভূমি অধিগ্রহণ ও হুকুমদখল<br>ব্যবস্থাপনা সিস্টেম</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg border-top">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa-solid fa-house me-1"></i> হোম</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="notice.html">নোটিস</a></li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link btn btn-login px-4 dropdown-toggle" id="loginDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-right-to-bracket me-1"></i> লগইন
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2"
+                                aria-labelledby="loginDropdown">
+                                <li><a class="dropdown-item py-2 fw-medium" target="_blank"
+                                        href="https://lsg-land-owner-stage.land.gov.bd/login">লগইন</a></li>
+                                <li><a class="dropdown-item py-2 fw-medium" target="_blank"
+                                        href="https://lsg-land-owner-stage.land.gov.bd/register">রেজিস্ট্রেশন</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2 fw-medium text-danger" target="_blank"
+                                        href="https://lsg-dashboard-stage.land.gov.bd/bn">প্রশাসনিক</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <section class="py-5">
+        <div class="container">
+            
+            <div class="d-flex align-items-center mb-4">
+                <h3 class="fw-bold m-0" style="color: var(--bd-green);"><i class="fa-solid fa-bullhorn me-2"></i> সকল নোটিশ</h3>
+                <div class="ms-3 flex-grow-1" style="height: 2px; background: linear-gradient(to right, var(--bd-green), transparent);"></div>
+            </div>
+
+            <div class="card filter-card mb-4">
+                <div class="card-body p-4">
+                    <form id="filterForm">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label for="divisionFilter" class="form-label fw-bold">বিভাগ নির্বাচন করুন</label>
+                                <select class="form-select" id="divisionFilter">
+                                    <option value="" selected>সকল বিভাগ</option>
+                                    <option value="ঢাকা">ঢাকা</option>
+                                    <option value="চট্টগ্রাম">চট্টগ্রাম</option>
+                                    <option value="রাজশাহী">রাজশাহী</option>
+                                    <option value="খুলনা">খুলনা</option>
+                                    <option value="বরিশাল">বরিশাল</option>
+                                    <option value="সিলেট">সিলেট</option>
+                                    <option value="রংপুর">রংপুর</option>
+                                    <option value="ময়মনসিংহ">ময়মনসিংহ</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="districtFilter" class="form-label fw-bold">জেলা নির্বাচন করুন</label>
+                                <select class="form-select" id="districtFilter">
+                                    <option value="" selected>সকল জেলা</option>
+                                    <option value="ঢাকা">ঢাকা</option>
+                                    <option value="গাজীপুর">গাজীপুর</option>
+                                    <option value="নারায়ণগঞ্জ">নারায়ণগঞ্জ</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-search w-100 py-2"><i class="fa-solid fa-search me-2"></i> অনুসন্ধান করুন</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table id="noticeTable" class="table table-striped table-bordered table-hover align-middle w-100">
+                            <thead>
+                                <tr>
+                                    <th width="5%" class="text-center">ক্র.নং</th>
+                                    <th width="15%">প্রকাশের তারিখ</th>
+                                    <th width="45%">নোটিশের শিরোনাম</th>
+                                    <th width="12%">বিভাগ</th>
+                                    <th width="13%">জেলা</th>
+                                    <th width="10%" class="text-center">অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">১</td>
+                                    <td>১০-জুলাই-২০২৬</td>
+                                    <td class="fw-medium">ধারা-৪ (৩) অনুযায়ী ভূমি অধিগ্রহণের প্রাথমিক নোটিশ (এলএ কেস নং: ১২/২০২৬)</td>
+                                    <td>ঢাকা</td>
+                                    <td>গাজীপুর</td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" title="পিডিএফ ডাউনলোড"><i class="fa-solid fa-file-pdf"></i> ডাউনলোড</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">২</td>
+                                    <td>০৫-জুলাই-২০২৬</td>
+                                    <td class="fw-medium">ক্ষতিপূরণ প্রদানের তারিখ ও সময় নির্ধারণ প্রসঙ্গে (এলএ কেস নং: ০৮/২০২৫)</td>
+                                    <td>চট্টগ্রাম</td>
+                                    <td>চট্টগ্রাম</td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" title="পিডিএফ ডাউনলোড"><i class="fa-solid fa-file-pdf"></i> ডাউনলোড</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">৩</td>
+                                    <td>২৮-জুন-২০২৬</td>
+                                    <td class="fw-medium">ধারা-৭ অনুযায়ী অধিগ্রহণকৃত ভূমির দখল হস্তান্তর নোটিশ</td>
+                                    <td>রাজশাহী</td>
+                                    <td>বগুড়া</td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" title="পিডিএফ ডাউনলোড"><i class="fa-solid fa-file-pdf"></i> ডাউনলোড</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">৪</td>
+                                    <td>১৫-জুন-২০২৬</td>
+                                    <td class="fw-medium">যৌথ ফিল্ড ইনভেন্টরি যাচাইকরণের সংশোধিত নোটিশ</td>
+                                    <td>ঢাকা</td>
+                                    <td>ঢাকা</td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" title="পিডিএফ ডাউনলোড"><i class="fa-solid fa-file-pdf"></i> ডাউনলোড</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">৫</td>
+                                    <td>০১-জুন-২০২৬</td>
+                                    <td class="fw-medium">অধিগ্রহণ কার্যক্রমে আপত্তি দাখিলের সময়সীমা বৃদ্ধি প্রজ্ঞাপন</td>
+                                    <td>খুলনা</td>
+                                    <td>যশোর</td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" title="পিডিএফ ডাউনলোড"><i class="fa-solid fa-file-pdf"></i> ডাউনলোড</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-md-4">
+                        <h5 class="mb-4 fw-bold text-white border-bottom border-secondary pb-2 d-inline-block">লার্মস
+                            সম্পর্কে</h5>
+                        <p class="text-light opacity-75" style="line-height: 1.8;">ভূমি অধিগ্রহণ ও হুকুমদখল ব্যবস্থাপনা
+                            সিস্টেম (LARMS) জাতীয় স্বার্থে ভূমি অধিগ্রহণের জন্য একটি স্বচ্ছ, কাগজবিহীন এবং দ্রুত
+                            প্রক্রিয়া নিশ্চিত করে। এটি ন্যায্য এবং দ্রুত ক্ষতিপূরণের ক্ষেত্রে নাগরিকদের অধিকার রক্ষা
+                            করে।</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="mb-4 fw-bold text-white border-bottom border-secondary pb-2 d-inline-block">
+                            প্রয়োজনীয় লিংক</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a target="_blank" href="http://bdlaws.minlaw.gov.bd/act-1220.html"><i class="fa-solid fa-angle-right me-2 text-warning"></i>স্থাবর
+                                    সম্পত্তি অধিগ্রহণ ও হুকুমদখল আইন, ২০১৭</a></li>
+                            <li class="mb-2"><a href="#"><i
+                                        class="fa-solid fa-angle-right me-2 text-warning"></i>অধিগ্রহণ ম্যানুয়াল</a>
+                            </li>
+                            <li class="mb-2"><a href="#"><i class="fa-solid fa-angle-right me-2 text-warning"></i>অভিযোগ
+                                    দাখিল করুন (GRS)</a></li>
+                            <li class="mb-2"><a href="#"><i class="fa-solid fa-angle-right me-2 text-warning"></i>সাধারণ
+                                    জিজ্ঞাসা (FAQ)</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="mb-4 fw-bold text-white border-bottom border-secondary pb-2 d-inline-block">সহায়তা
+                            কেন্দ্র</h5>
+                        <div class="d-flex align-items-center mb-3 p-3 rounded"
+                            style="background: rgba(255,255,255,0.1);">
+                            <i class="fa-solid fa-headset fs-1 me-3 text-warning"></i>
+                            <div>
+                                <h3 class="mb-0 text-warning fw-bold">১৬১২২</h3>
+                                <small class="text-light">কল সেন্টার (টোল ফ্রি)</small>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled text-light opacity-75 mt-3">
+                            <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-warning"></i>
+                                support.larms@land.gov.bd</li>
+                            <li><i class="fa-solid fa-location-dot me-2 text-warning"></i> ভূমি মন্ত্রণালয়, বাংলাদেশ
+                                সচিবালয়, ঢাকা-১০০০</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container d-flex justify-content-between flex-wrap align-items-center">
+                <div class="mb-2 mb-md-0">
+                    &copy; ২০২৬ গণপ্রজাতন্ত্রী বাংলাদেশ সরকার। সর্বস্বত্ব সংরক্ষিত।
+                </div>
+                <div class="text-end">
+                    উদ্যোগ ও বাস্তবায়নে: <span class="text-white fw-bold">ভূমি মন্ত্রণালয়</span><br>
+                    কারিগরি সহযোগিতায়: <a href="https://www.ddclbd.com" target="_blank" class="ddc-link">Development
+                        Design Consultants Limited</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable with Bengali Language
+            $('#noticeTable').DataTable({
+                language: {
+                    "sProcessing":   "প্রক্রিয়াকরণ হচ্ছে...",
+                    "sLengthMenu":   "_MENU_ টি রেকর্ড প্রদর্শন করুন",
+                    "sZeroRecords":  "কোন তথ্য পাওয়া যায়নি",
+                    "sInfo":         "_TOTAL_ টি রেকর্ডের মধ্যে _START_ থেকে _END_ পর্যন্ত দেখানো হচ্ছে",
+                    "sInfoEmpty":    "কোন রেকর্ড পাওয়া যায়নি",
+                    "sInfoFiltered": "(_MAX_ টি মোট রেকর্ড থেকে বাছাইকৃত)",
+                    "sSearch":       "অনুসন্ধান:",
+                    "oPaginate": {
+                        "sFirst":    "প্রথম",
+                        "sPrevious": "পূর্ববর্তী",
+                        "sNext":     "পরবর্তী",
+                        "sLast":     "শেষ"
+                    }
+                },
+                "order": [[ 0, "asc" ]] // Default sort by Sl No
+            });
+        });
+    </script>
+</body>
+
+</html>
